@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Server Error | SpamShield{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container narrow">
+        <h1>Something went wrong</h1>
+        <p>We encountered an unexpected error while processing your request. Please try again in a moment.</p>
+        <a class="btn secondary" href="{{ url_for('home') }}">Reload</a>
+    </div>
+</section>
+{% endblock %}

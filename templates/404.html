@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Page Not Found | SpamShield{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container narrow">
+        <h1>We couldn't find that page</h1>
+        <p>The link you followed may be broken or the page may have been removed.</p>
+        <a class="btn primary" href="{{ url_for('home') }}">Return to dashboard</a>
+    </div>
+</section>
+{% endblock %}

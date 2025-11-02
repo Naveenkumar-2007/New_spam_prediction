@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}SpamShield | Real-time Spam Protection{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-content">
+        <div class="hero-copy">
+            <h1>Shield every conversation from unwanted noise</h1>
+            <p>SpamShield watches over inbound SMS and email in real time, spotting suspicious intent before it disrupts your audience.</p>
+            <ul class="hero-highlights">
+                <li>Instant signal-to-noise scoring for frontline teams</li>
+                <li>Clear confidence ratings for faster decision making</li>
+                <li>Designed to plug into workflows without extra setup</li>
+            </ul>
+        </div>
+        <div class="hero-card">
+            <h2>Run a quick check</h2>
+            <form id="messageForm" class="message-form">
+                <label class="form-label" for="messageInput">Message</label>
+                <textarea id="messageInput" name="message" rows="6" placeholder="Paste an SMS or email to analyze..." required></textarea>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Analyze</button>
+                    <button type="button" class="btn secondary" id="clearButton">Clear</button>
+                </div>
+            </form>
+            <div id="formMessage" class="form-message" role="alert" hidden></div>
+        </div>
+    </div>
+</section>
+
+<section class="results" id="resultsSection" hidden>
+    <div class="container">
+        <div class="result-card" id="resultCard">
+            <div class="result-header">
+                <span class="result-label">Prediction</span>
+                <span id="predictionTag" class="tag"></span>
+            </div>
+            <p id="predictionText" class="result-text"></p>
+            <dl class="result-meta">
+                <div>
+                    <dt>Confidence</dt>
+                    <dd id="confidenceValue">--%</dd>
+                </div>
+                <div>
+                    <dt>Input Preview</dt>
+                    <dd id="messagePreview">No message</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+</section>
+
+<section class="trusted">
+    <div class="container trusted-content">
+    <h2>Why teams choose SpamShield</h2>
+        <div class="trusted-grid">
+            <article class="card">
+                <h3>Production Ready</h3>
+                <p>Designed for 24/7 uptime with health checks, graceful error handling, and JSON APIs that integrate anywhere.</p>
+            </article>
+            <article class="card">
+                <h3>Explainable Results</h3>
+                <p>Confidence scores for every prediction help your analysts understand how certain the model is about spam risks.</p>
+            </article>
+            <article class="card">
+                <h3>Privacy First</h3>
+                <p>No messages are persisted. Everything is analyzed in-memory so sensitive data never leaves your control.</p>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}SpamShield | Privacy Policy{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container narrow">
+        <h1>Privacy Policy</h1>
+        <p>We take data stewardship seriously. This overview explains how SpamShield treats the messages you submit.</p>
+    </div>
+</section>
+
+<section class="container narrow privacy-policy">
+    <h2>How We Process Messages</h2>
+    <p>Messages submitted through the web interface are processed in-memory and never written to disk. Once the prediction response is returned, the raw text is discarded.</p>
+
+    <h2>Internal Processing</h2>
+    <p>Risk scoring is performed entirely within the SpamShield service. No external scoring providers or third-party endpoints receive message content.</p>
+
+    <h2>Logging</h2>
+    <p>Application logs capture only truncated message previews (first 50 characters) to assist with debugging. You can disable this behavior by adjusting the logging statements in <code>app.py</code>.</p>
+
+    <h2>Contact</h2>
+    <p>If you have compliance questions, raise an issue in the repository or reach out to your platform administrator for assistance.</p>
+</section>
+{% endblock %}
