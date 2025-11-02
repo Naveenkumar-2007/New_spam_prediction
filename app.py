@@ -122,15 +122,31 @@ def health_check():
     try:
         # Try to load model
         predictor.load_model()
-        return jsonify({
-            'status': 'healthy',
+        
+        status_info = {
+            'status': 'healthy' if not predictor.fallback else 'degraded',
             'model_loaded': predictor.model is not None,
-            'fallback': getattr(predictor, 'fallback', False)
-        })
+            'tokenizer_loaded': predictor.tokenizer is not None,
+            'fallback_mode': predictor.fallback,
+            'model_path': predictor.model_path,
+            'preprocessing_path': predictor.preprocessing_path,
+            'model_exists': os.path.exists(predictor.model_path),
+            'preprocessing_exists': os.path.exists(predictor.preprocessing_path)
+        }
+        
+        if predictor.fallback:
+            logging.warning(f"Health check: Running in FALLBACK mode - model predictions unavailable")
+            return jsonify(status_info), 503
+        else:
+            logging.info(f"Health check: Model loaded successfully")
+            return jsonify(status_info), 200
+            
     except Exception as e:
+        logging.error(f"Health check failed: {str(e)}")
         return jsonify({
             'status': 'unhealthy',
-            'error': str(e)
+            'error': str(e),
+            'traceback': traceback.format_exc()
         }), 500
 
 @app.route('/features')
