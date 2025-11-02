@@ -2,14 +2,13 @@ services:
   - type: web
     name: spamshield
     env: python
+    runtime: python-3.11.9
     region: oregon
     plan: free
     branch: master
     buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
     startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120 --log-level info"
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
       - key: DEBUG_PREDICT_ERRORS
         value: "1"
       - key: TF_CPP_MIN_LOG_LEVEL
