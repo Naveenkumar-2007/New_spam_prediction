@@ -45,14 +45,22 @@ class predict:
         if self.model is None and not self.fallback:
             try:
                 # Check if model file exists
-                if not os.path.exists(self.model_path) or not os.path.exists(self.preprocessing_path):
-                    raise FileNotFoundError("Model or preprocessing artifacts missing")
+                logging.info(f"Checking model path: {self.model_path}")
+                logging.info(f"Checking preprocessing path: {self.preprocessing_path}")
+                logging.info(f"Model exists: {os.path.exists(self.model_path)}")
+                logging.info(f"Preprocessing exists: {os.path.exists(self.preprocessing_path)}")
+                
+                if not os.path.exists(self.model_path):
+                    raise FileNotFoundError(f"Model file not found at: {self.model_path}")
+                if not os.path.exists(self.preprocessing_path):
+                    raise FileNotFoundError(f"Preprocessing file not found at: {self.preprocessing_path}")
 
                 logging.info("Loading TensorFlow model...")
 
                 # Try to import TensorFlow; failures can happen on some deployment platforms
                 try:
                     import tensorflow as tf
+                    logging.info(f"TensorFlow version: {tf.__version__}")
                     tf.get_logger().setLevel('ERROR')
                 except Exception as tf_import_err:
                     logging.error(f"TensorFlow import failed: {tf_import_err}")
@@ -63,9 +71,10 @@ class predict:
                     self.model = load_model(self.model_path, compile=False)
                     # Compile for safe prediction API
                     self.model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-                    logging.info(f"Model loaded and compiled from: {self.model_path}")
+                    logging.info(f"SUCCESS: Model loaded and compiled from: {self.model_path}")
                 except Exception as tf_error:
                     logging.error(f"TensorFlow model loading error: {tf_error}")
+                    logging.error(f"Full traceback: {traceback.format_exc()}")
                     raise tf_error
 
                 # Load preprocessing objects
@@ -80,13 +89,14 @@ class predict:
 
                 self.tokenizer = preprocessing_obj['tokenizer']
                 self.max_length = preprocessing_obj['max_length']
-                logging.info(f"Tokenizer loaded (vocab size: {preprocessing_obj.get('vocab_size', 'unknown')})")
+                logging.info(f"SUCCESS: Tokenizer loaded (vocab size: {preprocessing_obj.get('vocab_size', 'unknown')})")
+                logging.info("MODEL LOADED SUCCESSFULLY - Using ML predictions")
 
             except Exception as e:
                 # Instead of crashing on deployment, enable fallback heuristic so app remains useful.
-                logging.error(f"Error loading model or preprocessing: {str(e)}")
-                logging.error(traceback.format_exc())
-                logging.warning("Switching to fallback heuristic predictor (keyword + URL detection)")
+                logging.error(f"CRITICAL: Error loading model or preprocessing: {str(e)}")
+                logging.error(f"Full error traceback:\n{traceback.format_exc()}")
+                logging.warning("FALLBACK MODE ACTIVATED - Using keyword heuristic instead of ML model")
                 self.fallback = True
     
     def clean_text(self, text):
